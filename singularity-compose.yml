@@ -1,0 +1,45 @@
+version: "1.0"
+instances:
+
+  cvatdb:
+    image: docker://postgres:10-alpine
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_DB: cvat
+    volumes:
+      - cvatdb:/var/lib/postgresql/data
+
+  cvatredis:
+    image: docker://redis:4.0-alpine
+
+  cvat:
+    build:
+      context: .
+      recipe: Singularity
+    depends_on:
+      - cvatredis
+      - cvatdb
+    ports:
+      - "8443:8443"
+      - "8080:8080"
+    build:
+      context: .
+    environment:
+      DJANGO_MODWSGI_EXTRA_ARGS: ""
+      UI_SCHEME: http
+      UI_HOST: localhost
+      UI_PORT: 7080
+    volumes:
+      - volumes/data:/home/django/data
+      - volumes/data:/home/django/keys
+      - volumes/data:/home/django/logs
+      - volumes/data:/home/django/models
+
+  cvatui:
+    build:
+      context: .
+      recipe: Singularity.ui
+    depends_on:
+      - cvat
+    ports:
+      - "7080:80"
