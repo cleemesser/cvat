@@ -83,6 +83,11 @@ apt-get update && \
     add-apt-repository --remove ppa:mc3man/xerus-media -y && \
     rm -rf /var/lib/apt/lists/*
 
+# Singularity doesn't support _ in hostname
+find /home/django -type f -not -path '*/\.*' -exec sed -i 's/cvat_db/cvatdb/g' {} +
+find /home/django -type f -not -path '*/\.*' -exec sed -i 's/cvat_redis/cvatredis/g' {} +
+find /home/django -type f -not -path '*/\.*' -exec sed -i 's/cvat_ui/cvatui/g' {} +
+
 # Add a non-root user
 export HOME=/home/${USER}
 cd ${HOME}
@@ -146,7 +151,7 @@ mkdir -p data share media keys logs /tmp/supervisord /root/logs/
 python3 manage.py collectstatic
 
 %startscript
-exec /usr/bin/supervisord -c /home/django/supervisord.conf
+/usr/bin/supervisord -c /home/django/supervisord.conf
 
 %setup
 mkdir -p "${SINGULARITY_ROOTFS}/home/django"
@@ -161,6 +166,6 @@ mkdir -p "${SINGULARITY_ROOTFS}/home/django"
 ./ssh /home/django/.ssh
 ./utils /home/django/utils
 ./cvat/ /home/django/cvat
-./cvat-core/ /home/django//cvat-core
+./cvat-core/ /home/django/cvat-core
 ./tests /home/django/tests
 ./datumaro/ /home/django/datumaro

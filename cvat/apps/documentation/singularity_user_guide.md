@@ -103,16 +103,21 @@ Next, you can bring up the containers as instances.
 
 ```bash
 $ singularity-compose up
+Creating cvatdb
+Creating cvatredis
+Creating cvat
+Creating cvatui
 ```
 
 Check to see the containers running!
 
 ```bash
 $ singularity-compose ps
-Creating cvatdb
-Creating cvatredis
-Creating cvat
-Creating cvatui
+INSTANCES  NAME PID     IMAGE
+1          cvat	23038	cvat.sif
+2        cvatdb	18716	cvatdb.sif
+3     cvatredis	22865	cvatredis.sif
+4        cvatui	23241	cvatui.sif
 ```
 
 You can check that the server started by looking at the logs:
@@ -120,8 +125,6 @@ You can check that the server started by looking at the logs:
 ```bash
 $ singularity-compose logs
 ```
-
-**being written**
 
 
 ### Shell Inside
