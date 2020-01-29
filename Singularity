@@ -5,6 +5,28 @@ From: ubuntu:16.04
 # It would be more ideal to have a shared docker base to start from
 # but this doesn't currently exist.
 
+%environment
+# These were previously Docker build args
+export CUDA_SUPPORT="no"
+export WITH_DEXTR="no"
+export http_proxy=
+export https_proxy=
+export no_proxy=
+export socks_proxy=
+export TF_ANNOTATION="no"
+export AUTO_SEGMENTATION="no"
+export USER="django"
+export DJANGO_CONFIGURATION="production"
+export TZ="Etc/UTC"
+export OPENVINO_TOOLKIT="no"
+export TERM=xterm
+export LANG='C.UTF-8'
+export LC_ALL='C.UTF-8'
+export UI_SCHEME="http"
+export UI_HOST="localhost"
+export UI_PORT=7080
+
+
 %post
 # These were previously Docker build args
 export CUDA_SUPPORT="no"
@@ -120,11 +142,11 @@ chown -R ${USER}:${USER} .
 # RUN all commands below as 'django' user
 # USER ${USER}
 ls 
-mkdir -p data share media keys logs /tmp/supervisord
+mkdir -p data share media keys logs /tmp/supervisord /root/logs/
 python3 manage.py collectstatic
 
 %startscript
-exec /usr/bin/supervisord
+exec /usr/bin/supervisord -c /home/django/supervisord.conf
 
 %setup
 mkdir -p "${SINGULARITY_ROOTFS}/home/django"
@@ -132,7 +154,7 @@ mkdir -p "${SINGULARITY_ROOTFS}/home/django"
 %files
 ./components /tmp/components
 ./cvat/requirements/ /tmp/requirements/
-./supervisord.conf /home/django/
+./supervisord-singularity.conf /home/django/supervisord.conf
 ./mod_wsgi.conf /home/django/
 ./wait-for-it.sh /home/django/
 ./manage.py /home/django/

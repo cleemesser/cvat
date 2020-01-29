@@ -9,6 +9,20 @@ From: ubuntu:18.04
 ./cvat-canvas /tmp/cvat-canvas/
 ./cvat-ui /tmp/cvat-ui/
 
+%environment
+#IMPORTANT make sure to edit these also in %post
+export http_proxy=
+export https_proxy=
+export no_proxy=
+export socks_proxy=
+export REACT_APP_API_PROTOCOL=http
+export REACT_APP_API_HOST=localhost
+export REACT_APP_API_PORT=8080
+export TERM=xterm
+export LANG='C.UTF-8'
+export LC_ALL='C.UTF-8'
+
+
 %post
 export http_proxy=
 export https_proxy=
