@@ -99,6 +99,13 @@ with a corresponding image for each of `cvatredis`, and `cvatdb`.
 
 ### Start Container Instances
 
+We can't keep any files in the directory for postgres, so it's not included in the
+repository and you should make it.
+
+```bash
+mkdir -p volumes/data
+```
+
 Next, you can bring up the containers as instances.
 
 ```bash

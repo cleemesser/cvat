@@ -61,6 +61,7 @@ apt-get update && \
         gstreamer0.10-ffmpeg \
         libldap2-dev \
         libsasl2-dev \
+        iputils-ping \
         python3-dev \
         python3-pip \
         tzdata \
@@ -151,7 +152,7 @@ mkdir -p data share media keys logs /tmp/supervisord /root/logs/
 python3 manage.py collectstatic
 
 %startscript
-/usr/bin/supervisord -c /home/django/supervisord.conf
+/usr/bin/supervisord -c /home/django/supervisord.conf --logfile /tmp/cvat-supervisord.log
 
 %setup
 mkdir -p "${SINGULARITY_ROOTFS}/home/django"
