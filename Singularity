@@ -159,14 +159,14 @@ mkdir -p "${SINGULARITY_ROOTFS}/home/django"
 
 %files
 ./components /tmp/components
-./cvat/requirements/ /tmp/requirements/
+./cvat/requirements /tmp/requirements
 ./supervisord-singularity.conf /home/django/supervisord.conf
 ./mod_wsgi.conf /home/django/
 ./wait-for-it.sh /home/django/
 ./manage.py /home/django/
 ./ssh /home/django/.ssh
 ./utils /home/django/utils
-./cvat/ /home/django/cvat
-./cvat-core/ /home/django/cvat-core
+./cvat /home/django/cvat
+./cvat-core /home/django/cvat-core
 ./tests /home/django/tests
-./datumaro/ /home/django/datumaro
+./datumaro /home/django/datumaro

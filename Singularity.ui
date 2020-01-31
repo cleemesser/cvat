@@ -5,9 +5,9 @@ From: ubuntu:18.04
 # easily support that.
 
 %files
-./cvat-core /tmp/cvat-core/
-./cvat-canvas /tmp/cvat-canvas/
-./cvat-ui /tmp/cvat-ui/
+./cvat-core /tmp/cvat-core
+./cvat-canvas /tmp/cvat-canvas
+./cvat-ui /tmp/cvat-ui
 
 %environment
 #IMPORTANT make sure to edit these also in %post
@@ -21,7 +21,6 @@ export REACT_APP_API_PORT=8080
 export TERM=xterm
 export LANG='C.UTF-8'
 export LC_ALL='C.UTF-8'
-
 
 %post
 export http_proxy=
