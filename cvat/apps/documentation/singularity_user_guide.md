@@ -13,7 +13,7 @@ $ pip install singularity-compose --user
 Clone the repository
 
 ```bash
-$ git clone https://www.github.com/opencv/cvat
+$ git clone https://github.com/opencv/cvat
 $ cd cvat
 ```
 
@@ -25,6 +25,10 @@ This application serves four Singularity containers:
  - cvatredis: uses the Docker image `redis:4.0-alpine`
  - cvat: is a custom build from the Singularity recipe. It also has a set of environment variables in the singularity-compose.yml you should inspect. It mounts writable folders under "volumes."
  - cvatui: is another custom build from Singularity.ui that builds and serves a web application (exposes port 80).
+
+Singularity doesn't [allow hostnames](https://github.com/sylabs/singularity/blob/8f0ea1f8116a96ae573b336352ceaa08f851af8a/internal/pkg/util/fs/files/hostname.go) with underscores, so as part of the container builds above, the hostnames are changes.
+If you look in the [singularity-compose.yml](../../../singularity-compose.yml)
+you'll notice these names used.
 
 ## Environment
 
@@ -68,7 +72,7 @@ you can of course change these variables before building.
 ## Build Containers
 
 Once you are happy with environment variables (settings) you can build your
-containers. Note that you'll need root to do this, so likely you'll need to
+containers. Note that you'll need sudo (root permission) to do this, so likely you'll need to
 build them off of a shared resource. If the resource supports it, you can also
 try using Singularity `--fakeroot` ([docs here](https://sylabs.io/guides/3.5/user-guide/fakeroot.html)). That would look like this in the singularity-compose.yml file, for
 each of the containers:
@@ -103,7 +107,7 @@ We can't keep any files in the directory for postgres, so it's not included in t
 repository and you should make it.
 
 ```bash
-mkdir -p volumes/data
+mkdir -p volumes/db
 ```
 
 Next, you can bring up the containers as instances.
@@ -133,6 +137,22 @@ You can check that the server started by looking at the logs:
 $ singularity-compose logs
 ```
 
+### Entrypoint
+
+The previous entrypoint for the cvat container was to start the server
+with supervisord, however that didn't work cleanly with Singularity because of
+the rule "the user inside the container is the user outside the container."
+So, given that you start as root (or with `--fakeroot`, as yourself) we
+can't honor the USER directive in the Dockerfile to be the user "django."
+For this reason, we currently have the entrypoint (called the `%startscript` section
+in Singularity) as running a development server with:
+
+```bash
+python3 manage.py runserver 0.0.0.0:8080
+```
+
+This could be modified to either fix the supervisord deployment (likely
+challenging) or use another method to keep the server running.
 
 ### Shell Inside
 
