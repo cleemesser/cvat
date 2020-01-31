@@ -137,6 +137,12 @@ You can check that the server started by looking at the logs:
 $ singularity-compose logs
 ```
 
+And you should then be able to open your browser to [http://localhost:7080](http://localhost:7080) to see the application. When you are ready to bring down the application:
+
+```bash
+$ singularity-compose down
+```
+
 ### Entrypoint
 
 The previous entrypoint for the cvat container was to start the server
