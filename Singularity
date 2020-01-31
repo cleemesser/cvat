@@ -152,6 +152,9 @@ mkdir -p data share media keys logs /tmp/supervisord /root/logs/
 python3 manage.py collectstatic
 
 %startscript
+cd /home/django
+python3 manage.py makemigrations
+python3 manage.py migrate
 python3 manage.py runserver 0.0.0.0:8080
 # old start command commented out, using runserver for now.
 # this should either be fixed or replaced with different method to run server
