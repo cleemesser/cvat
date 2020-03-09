@@ -1,0 +1,53 @@
+running singularity-compose --debug up
+
+With current singularity-compose.yml, no net args are created
+
+Creating cvat
+DEBUG
+
+sudo singularity instance start --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvat:/home/django/cvat --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/data:/home/django/data --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/keys:/home/django/keys --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/logs:/home/django/logs --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/models:/home/django/models --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvat-env.sh:/.singularity.d/env/92-common.sh --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/resolv.conf:/etc/resolv.conf --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/etc.hosts:/etc/hosts --writable-tmpfs  --net --network-args="IP=10.22.0.3" /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvat.sif cvat
+
+Creating cvatui
+DEBUG
+
+singularity instance start --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvat-env.sh:/.singularity.d/env/92-common.sh --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/resolv.conf:/etc/resolv.conf --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/etc.hosts:/etc/hosts --writable-tmpfs  --net --network-args="IP=10.22.0.2" /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvatui.sif cvatui
+
+
+clee@lotus:~/code/eegml/researchapp-cvat-fork$ singuarlity-compse down
+
+
+
+
+#
+if set
+DJANGO_CONFIGURATION=production
+export DJANGO_CONFIGURATION=development
+then can do
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py runserver 0.0.0.0:8080
+
+and can accesss localhost://admin on the host
+
+
+## need to configure postgresql.conf to listen on something that includes our containers
+listen_addresses = '*'
+
+
+sudo singularity instance start --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvat:/home/django/cvat --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/data:/home/django/data --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/keys:/home/django/keys --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/logs:/home/django/logs --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/models:/home/django/models --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvat-env.sh:/.singularity.d/env/92-common.sh --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/resolv.conf:/etc/resolv.conf --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/etc.hosts:/etc/hosts --writable-tmpfs  --net --network-args="IP=10.22.0.3" /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvat.sif cvat
+
+
+### hey this seems to more or less work!! 
+
+ sudo singularity instance start --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvat:/home/django/cvat --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/data:/home/django/data --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/keys:/home/django/keys --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/logs:/home/django/logs --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/volumes/models:/home/django/models --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvat-env.sh:/.singularity.d/env/92-common.sh --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/resolv.conf:/etc/resolv.conf --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/etc.hosts:/etc/hosts --writable-tmpfs  --net --network-args="IP=10.22.0.3,portmap=8080:8080/tcp" /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvat.sif cvat
+INFO:    instance started successfully
+# note when in produciton mode, this is starting things from python3 manage.py runserver 0.0.0.0:8080 it will not serve static files (unless add --insecure)
+
+
+
+# this runs nginx and npm I think cvat-core react
+
+sudo singularity instance start --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvat-env.sh:/.singularity.d/env/92-common.sh --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/resolv.conf:/etc/resolv.conf --bind /mnt/home2/clee/code/eegml/researchapp-cvat-fork/etc.hosts:/etc/hosts --writable-tmpfs  --net --network-args="IP=10.22.0.2,portmap=7080:7080/tcp" /mnt/home2/clee/code/eegml/researchapp-cvat-fork/cvatui.sif cvatui
+
+
+# sudo ufw allow 5432/tcp

@@ -1,5 +1,8 @@
-Bootstrap: docker
+BootStrap: library
 From: ubuntu:16.04
+#BootStrap: debootstrap
+#OSVersion: xenial
+#MirrorURL: http://us.archive.ubuntu.com/ubuntu/
 
 # This is the Singularity container to build the cvat image.
 # It would be more ideal to have a shared docker base to start from
@@ -68,6 +71,7 @@ apt-get update && \
         p7zip-full \
         git \
         ssh \
+	postgresql-client \
         poppler-utils \
         curl && \
     curl https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
@@ -155,7 +159,8 @@ python3 manage.py collectstatic
 cd /home/django
 python3 manage.py makemigrations
 python3 manage.py migrate
-python3 manage.py runserver 0.0.0.0:8080
+#python3 manage.py runserver 0.0.0.0:8080 # need to get modwsgi running to serve static files
+python3 manage.py runserver 0.0.0.0:8080 --insecure
 # old start command commented out, using runserver for now.
 # this should either be fixed or replaced with different method to run server
 #/usr/bin/supervisord -c /home/django/supervisord.conf --logfile /tmp/cvat-supervisord.log
